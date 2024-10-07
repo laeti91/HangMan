@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	fmt.Println("Welcome to the hangman game !")
+	fmt.Println("\nWelcome to the hangman game !")
 	fmt.Print("Are you ready to guess the word and have fun. (Y/N) : ")
 
 	scanner1 := bufio.NewScanner(os.Stdin)
@@ -21,7 +21,7 @@ func main() {
 
 	if cont == "Y" {
 
-		fmt.Println("\nGood luck !")
+		fmt.Println("\nGood luck you have 10 attemps !")
 
 		word := WordToFind()
 
@@ -71,12 +71,12 @@ func main() {
 			printWordGuessStatus(word, wordFoundLetters)
 
 			if allLettersFounds(word, wordFoundLetters) {
-				fmt.Println("Congratulation, you found the word : ", word)
+				fmt.Println("Congratulation, you found the word :", word, "\n")
 				break
 			}
 
 			if attempts == 0 {
-				fmt.Println("Your number of attempts reached 0. The word was : ", word)
+				fmt.Println("Your number of attempts reached 0. The word was : ", word, "\n")
 			}
 		}
 	} else {
@@ -106,7 +106,7 @@ func allLettersFounds(word string, wordFoundLetters map[rune]bool) bool {
 }
 
 func WordToFind() string {
-	f, err := os.Open("word.txt")
+	f, err := os.Open("words2.txt")
 	scanner := bufio.NewScanner(f)
 	nbrMots := 0
 
@@ -126,7 +126,7 @@ func WordToFind() string {
 func Scan(nbr int) string {
 	mot := ""
 	nbrMots2 := 0
-	f, err := os.Open("word.txt")
+	f, err := os.Open("words2.txt")
 	scanner := bufio.NewScanner(f)
 
 	if err != nil {
