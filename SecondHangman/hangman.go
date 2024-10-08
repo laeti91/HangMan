@@ -57,3 +57,27 @@ func PrintAsciiHugeLett(input string) {
 		fmt.Println()
 	}
 }
+
+func GetHangman(nbr int) {
+	f, err := os.Open("hangman.txt")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	ligne := 0
+
+	for scanner.Scan() {
+		ligne++
+		if ligne >= nbr && ligne <= nbr+8 {
+			fmt.Println(scanner.Text())
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+}
