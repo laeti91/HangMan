@@ -7,7 +7,6 @@ import (
 	"math/rand"
 	"os"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -148,7 +147,6 @@ type LetterIndices struct {
 }
 
 func nUniqueRandomLetters(word string) []LetterIndices {
-	rand.Seed(time.Now().UnixNano())
 	n := len(word)/2 - 1
 	var tab []LetterIndices
 	totalIndices := 0
@@ -179,6 +177,7 @@ func nUniqueRandomLetters(word string) []LetterIndices {
 	}
 	return tab
 }
+
 func GetHangman(nbr int) {
 	f, err := os.Open("hangman.txt")
 

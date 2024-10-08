@@ -8,33 +8,52 @@ import (
 )
 
 func main() {
-	nbr := rune(')')
-	GetAsciiLett(int(nbr))
+	input := "H"
+	input1 := "ello"
+	input2 := input + input1
+	PrintAsciiHugeLett(input2)
+
 }
 
-func GetAsciiLett(nbr int) {
+func GetAsciiLett(nbr int) []string {
+
 	f, err := os.Open("standard.txt")
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-	ligne := -9
+	line := 0
+	actualLine := (nbr - 32) * 9
+	var asciiLetter []string
 
 	for scanner.Scan() {
-		ligne = ligne + 9
-		if ligne == (nbr-32)*9 {
-			for i := ligne; i < ligne+9; i++ {
-				print(i)
-				fmt.Println(scanner.Text())
-			}
+		if line >= actualLine && line < actualLine+9 {
+			asciiLetter = append(asciiLetter, scanner.Text())
 		}
+		line++
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
+	}
+
+	return asciiLetter
+}
+
+func PrintAsciiHugeLett(input string) {
+	var asciiHugeLett [][]string
+
+	for _, char := range input {
+		asciiHugeLett = append(asciiHugeLett, GetAsciiLett(int(char)))
+	}
+
+	for i := 0; i < 9; i++ {
+		for _, letter := range asciiHugeLett {
+			fmt.Print(letter[i])
+		}
+		fmt.Println()
 	}
 }
