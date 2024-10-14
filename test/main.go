@@ -7,84 +7,83 @@ import (
 	"math/rand"
 	"os"
 	"strings"
-	"time"
 )
 
 func main() {
 
-	fmt.Println("Welcome to the hangman game !")
-	fmt.Print("Are you ready to guess the word and have fun. (Y/N) : ")
+	fmt.Println("\nWelcome to the hangman game !")
+	fmt.Print("Try to guess the word and have fun !")
 
-	scanner1 := bufio.NewScanner(os.Stdin)
-	scanner1.Scan()
-	cont := scanner1.Text()
+	fmt.Println("\nGood luck you have 10 attemps !")
 
-	if cont == "Y" || cont == "y" {
+	word := WordToFind()
 
-		fmt.Println("\nGood luck you have 10 attempts!")
+	letterIndices := nUniqueRandomLetters(word)
+	wordFoundLetters := make(map[rune]bool)
 
-		word := WordToFind()
-
-		letterIndices := nUniqueRandomLetters(word)
-		wordFoundLetters := make(map[rune]bool)
-
-		for _, li := range letterIndices {
-			for _, i := range li.Indices {
-				wordFoundLetters[rune(word[i])] = true
-			}
+	for _, li := range letterIndices {
+		for _, i := range li.Indices {
+			wordFoundLetters[rune(word[i])] = true
 		}
-		printWordGuessStatus(word, wordFoundLetters)
-
-		attempts := 10
-
-		scanner := bufio.NewScanner(os.Stdin)
-
-		for attempts != 0 {
-			fmt.Print("Enter a letter : ")
-			scanner.Scan()
-			letter := scanner.Text()
-
-			if len(letter) != 1 {
-				fmt.Println("Please enter only one letter.\n")
-				continue
-			}
-
-			letterGiven := rune(letter[0])
-
-			if wordFoundLetters[letterGiven] {
-				fmt.Println("You already tried that letter\n")
-				continue
-			}
-			wordFoundLetters[letterGiven] = true
-
-			if strings.ContainsRune(word, letterGiven) {
-				fmt.Println("wright answer, ", letter, "is present in the word\n")
-			} else {
-				attempts--
-				nbr := (10 - attempts - 1) * 8
-				GetHangman(nbr)
-				if attempts > 0 {
-					fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word\n")
-				}
-			}
-
-			printWordGuessStatus(word, wordFoundLetters)
-
-			if allLettersFounds(word, wordFoundLetters) {
-				fmt.Println("Congratulation, you found the word :", word)
-				break
-			}
-
-			if attempts == 0 {
-				fmt.Println("Your number of attempts reached 0. The word was :", word)
-			}
-		}
-	} else {
-		fmt.Println("See you next time !")
 	}
+	word1 := printWordGuessStatus(word, wordFoundLetters)
+	PrintAsciiHugeLett(word1)
+
+	attempts := 10
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for attempts != 0 {
+		fmt.Print("\nEnter a letter : ")
+		scanner.Scan()
+		letter := scanner.Text()
+
+		if len(letter) != 1 {
+			fmt.Println("Please enter only one letter.")
+			fmt.Printf("\n")
+			continue
+		}
+
+		letterGiven := rune(letter[0])
+
+		if wordFoundLetters[letterGiven] {
+			fmt.Println("You already tried that letter")
+			fmt.Printf("\n")
+			continue
+		}
+		wordFoundLetters[letterGiven] = true
+
+		if strings.ContainsRune(word, letterGiven) {
+			fmt.Println("wright answer, ", letter, "is present in the word")
+			fmt.Printf("\n")
+		} else {
+			attempts--
+			nbr := (10 - attempts - 1) * 8
+			GetHangman(nbr)
+			if attempts > 0 {
+				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word")
+				fmt.Printf("\n")
+			}
+		}
+
+		word2 := printWordGuessStatus(word, wordFoundLetters)
+		PrintAsciiHugeLett(word2)
+
+		if allLettersFounds(word, wordFoundLetters) {
+			fmt.Println("\nCongratulation, you found the word :", word)
+			fmt.Printf("\n")
+			break
+		}
+
+		if attempts == 0 {
+			fmt.Println("Your number of attempts reached 0. The word was : ", word)
+			fmt.Printf("\n")
+		}
+	}
+
 }
 
-func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) {
+func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) string {
 	wordPrinted := ""
 	for _, characters := range word {
 		if wordFoundLetters[characters] {
@@ -93,7 +92,7 @@ func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) {
 			wordPrinted += "_"
 		}
 	}
-	fmt.Println(wordPrinted)
+	return wordPrinted
 }
 
 func allLettersFounds(word string, wordFoundLetters map[rune]bool) bool {
@@ -148,7 +147,6 @@ type LetterIndices struct {
 }
 
 func nUniqueRandomLetters(word string) []LetterIndices {
-	rand.Seed(time.Now().UnixNano())
 	n := len(word)/2 - 1
 	var tab []LetterIndices
 	totalIndices := 0
@@ -179,6 +177,7 @@ func nUniqueRandomLetters(word string) []LetterIndices {
 	}
 	return tab
 }
+
 func GetHangman(nbr int) {
 	f, err := os.Open("hangman.txt")
 
@@ -203,7 +202,8 @@ func GetHangman(nbr int) {
 	}
 }
 
-func GetAsciiLett(nbr int) {
+func GetAsciiLett(nbr int) []string {
+
 	f, err := os.Open("standard.txt")
 
 	if err != nil {
@@ -215,15 +215,33 @@ func GetAsciiLett(nbr int) {
 	scanner := bufio.NewScanner(f)
 	line := 0
 	actualLine := (nbr - 32) * 9
+	var asciiLetter []string
 
 	for scanner.Scan() {
 		if line >= actualLine && line < actualLine+9 {
-			fmt.Println(scanner.Text())
+			asciiLetter = append(asciiLetter, scanner.Text())
 		}
 		line++
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
+	}
+
+	return asciiLetter
+}
+
+func PrintAsciiHugeLett(input string) {
+	var asciiHugeLett [][]string
+
+	for _, char := range input {
+		asciiHugeLett = append(asciiHugeLett, GetAsciiLett(int(char)))
+	}
+
+	for i := 0; i < 9; i++ {
+		for _, letter := range asciiHugeLett {
+			fmt.Print(letter[i])
+		}
+		fmt.Println()
 	}
 }

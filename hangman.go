@@ -44,38 +44,44 @@ func main() {
 			letter := scanner.Text() // on affecte la lettre dans une variable
 
 			if len(letter) != 1 { // si il y a plus d'une lettre donc si letter a plus de 1 caractère alors
-				fmt.Println("Please enter only one letter.\n") // on demande d'entrer une seule lettre
-				continue                                       // la boucle reprend à la saisie de la lettre
+				fmt.Println("Please enter only one letter.") // on demande d'entrer une seule lettre
+				fmt.Printf("\n")
+				continue // la boucle reprend à la saisie de la lettre
 			}
 
 			letterGiven := rune(letter[0]) // on affecte la première rune de la string letter (la seule lettre donc) à une variable pour garder uniquement cette rune ci
 
 			if wordFoundLetters[letterGiven] { // on teste si la lettre qui a était donnée à déjà était donnée
-				fmt.Println("You already tried that letter\n") // si elle est déjà présente on dit que la lettre a déjà était entrée
-				continue                                       // la boucle reprend à la saisie de la lettre
+				fmt.Println("You already tried that letter") // si elle est déjà présente on dit que la lettre a déjà était entrée
+				fmt.Printf("\n")
+				continue // la boucle reprend à la saisie de la lettre
 			}
 			wordFoundLetters[letterGiven] = true // on fait en sorte que la lettre donnée ne puisse pas être de nouveau entrée en gardant la lettre
 
 			if strings.ContainsRune(word, letterGiven) { // on teste si la lettre est présente dans le mot avec la fonction string.ContainsRune
-				fmt.Println("wright answer, ", letter, "is present in the word\n") // la lettre est présente dans le mot
+				fmt.Println("wright answer, ", letter, "is present in the word") // la lettre est présente dans le mot
+				fmt.Printf("\n")
 			} else { // sinon
 				attempts--                     // on réduit le nombre d'essais de 1
 				nbr := (10 - attempts - 1) * 8 // les actions pour afficher le hangman correctement
 				GetHangman(nbr)                // on appelle la fontion pour afficher le hangman
 				if attempts > 0 {              // si il reste des chances
-					fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word\n") // on dit que c'est faux et on donne le nombre de chances restantes
+					fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word") // on dit que c'est faux et on donne le nombre de chances restantes
+					fmt.Printf("\n")
 				}
 			}
 
 			printWordGuessStatus(word, wordFoundLetters) // on affiche le nouveau status du mot avec les lettre trouvée ou non
 
 			if allLettersFounds(word, wordFoundLetters) { // si toutes les lettres ont étaient trouvée alors
-				fmt.Println("Congratulation, you found the word :", word) // le jeu est gagné on affiche le mot final
-				break                                                     // on met fin au programme
+				fmt.Println("\nCongratulation, you found the word :", word) // le jeu est gagné on affiche le mot final
+				fmt.Printf("\n")
+				break // on met fin au programme
 			}
 
 			if attempts == 0 { // si le nombre de chances est arrivé à 0 alors
-				fmt.Println("Your number of attempts reached 0. The word was :", word) // on dit que c'est un echec et on donne le mot
+				fmt.Println("Your number of attempts reached 0. The word was : ", word) // le jeu est perdu on affiche le mot
+				fmt.Printf("\n")
 			}
 		}
 	} else { // si la personne ne veux pas jouer alors
