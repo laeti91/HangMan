@@ -19,7 +19,7 @@ func main() {
 	scanner1.Scan()
 	cont := scanner1.Text()
 
-	if cont == "Y" {
+	if cont == "Y" || cont == "y" {
 
 		fmt.Println("\nGood luck you have 10 attempts!")
 

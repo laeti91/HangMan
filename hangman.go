@@ -12,13 +12,13 @@ import (
 func main() {
 
 	fmt.Println("Welcome to the hangman game !")
-	fmt.Print("Are you ready to guess the word and have fun. (y/n) : ")
+	fmt.Print("Are you ready to guess the word and have fun. (Y/N) : ")
 
 	scanner1 := bufio.NewScanner(os.Stdin) // Pour faire entrer une valeur (oui/non)
 	scanner1.Scan()                        //pour afficher la valeur(oui/non)
 	cont := scanner1.Text()                // affecter la valeur entrée dans la variable cont(continuer)
 
-	if cont == "y" { // si cont = oui alors
+	if cont == "Y" || cont == "y" { // si cont = oui alors
 
 		fmt.Println("\nGood luck you have 10 attempts!")
 
