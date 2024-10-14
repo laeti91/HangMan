@@ -40,7 +40,7 @@ func main() {
 
 		if len(letter) != 1 {
 			fmt.Println("Please enter only one letter.")
-			fmt.Printf("\n")
+			fmt.Println()
 			continue
 		}
 
@@ -48,21 +48,21 @@ func main() {
 
 		if wordFoundLetters[letterGiven] {
 			fmt.Println("You already tried that letter")
-			fmt.Printf("\n")
+			fmt.Println()
 			continue
 		}
 		wordFoundLetters[letterGiven] = true
 
 		if strings.ContainsRune(word, letterGiven) {
 			fmt.Println("wright answer, ", letter, "is present in the word")
-			fmt.Printf("\n")
+			fmt.Println()
 		} else {
 			attempts--
 			nbr := (10 - attempts - 1) * 8
 			GetHangman(nbr)
 			if attempts > 0 {
 				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word")
-				fmt.Printf("\n")
+				fmt.Println()
 			}
 		}
 
@@ -71,13 +71,13 @@ func main() {
 
 		if allLettersFounds(word, wordFoundLetters) {
 			fmt.Println("\nCongratulation, you found the word :", word)
-			fmt.Printf("\n")
+			fmt.Println()
 			break
 		}
 
 		if attempts == 0 {
 			fmt.Println("Your number of attempts reached 0. The word was : ", word)
-			fmt.Printf("\n")
+			fmt.Println()
 		}
 	}
 
