@@ -9,17 +9,22 @@ import (
 	"strings"
 )
 
-func wordToFind() string {
-	f, err := os.Open("words2.txt")
+func readFile(name string) (*bufio.Scanner, *os.File) {
+	f, err := os.Open(name)
 	scanner := bufio.NewScanner(f)
-	nbrWord := 0
-
-	for scanner.Scan() {
-		nbrWord++
-	}
 
 	if err != nil {
 		log.Fatal(err)
+	}
+	return scanner, f
+}
+
+func wordToFind() string {
+	nbrWord := 0
+	scanner, _ := readFile("words2.txt")
+
+	for scanner.Scan() {
+		nbrWord++
 	}
 
 	randomNumber := rand.Intn(nbrWord)
@@ -30,12 +35,8 @@ func wordToFind() string {
 func scanWord(nbr int) string {
 	word := ""
 	nbrWord2 := 0
-	f, err := os.Open("words2.txt")
-	scanner := bufio.NewScanner(f)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	scanner, _ := readFile("words2.txt")
 
 	for scanner.Scan() {
 		nbrWord2++
@@ -116,15 +117,10 @@ func nUniqueRandomLetters(word string) []LetterIndices {
 }
 
 func getHangman(nbr int) {
-	f, err := os.Open("hangman.txt")
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	scanner, f := readFile("hangman.txt")
 
 	defer f.Close()
 
-	scanner := bufio.NewScanner(f)
 	line := 0
 
 	for scanner.Scan() {
