@@ -12,24 +12,24 @@ import (
 func wordToFind() string {
 	f, err := os.Open("words2.txt")
 	scanner := bufio.NewScanner(f)
-	nbrMots := 0
+	nbrWord := 0
 
 	for scanner.Scan() {
-		nbrMots++
+		nbrWord++
 	}
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	randomNumber := rand.Intn(nbrMots)
+	randomNumber := rand.Intn(nbrWord)
 
 	return scanWord(randomNumber)
 }
 
 func scanWord(nbr int) string {
-	mot := ""
-	nbrMots2 := 0
+	word := ""
+	nbrWord2 := 0
 	f, err := os.Open("words2.txt")
 	scanner := bufio.NewScanner(f)
 
@@ -38,12 +38,12 @@ func scanWord(nbr int) string {
 	}
 
 	for scanner.Scan() {
-		nbrMots2++
-		if nbrMots2 == nbr {
-			mot = scanner.Text()
+		nbrWord2++
+		if nbrWord2 == nbr {
+			word = scanner.Text()
 		}
 	}
-	return mot
+	return word
 }
 
 func getStatus(word string, wordFoundLetters map[rune]bool) {
@@ -125,11 +125,11 @@ func getHangman(nbr int) {
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-	ligne := 0
+	line := 0
 
 	for scanner.Scan() {
-		ligne++
-		if ligne >= nbr && ligne <= nbr+8 {
+		line++
+		if line >= nbr && line <= nbr+8 {
 			fmt.Println(scanner.Text())
 		}
 	}
