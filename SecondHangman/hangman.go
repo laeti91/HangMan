@@ -107,25 +107,30 @@ func GetHangman(nbr int) {
 	}
 }
 
-func GetAsciiLett(nbr int) []string {
+func LinesInTxtDoc(name string) []string {
+	var allLines []string
 
-	scanner, f := readFile("standard.txt")
-
+	f, err := os.Open(name)
+	scanner := bufio.NewScanner(f)
 	defer f.Close()
 
-	line := 0
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for scanner.Scan() {
+		allLines = append(allLines, scanner.Text())
+	}
+	return allLines
+}
+
+func GetAsciiLett(nbr int) []string {
+	list := LinesInTxtDoc("standard.txt")
 	actualLine := (nbr - 32) * 9
 	var asciiLetter []string
 
-	for scanner.Scan() {
-		if line >= actualLine && line < actualLine+9 {
-			asciiLetter = append(asciiLetter, scanner.Text())
-		}
-		line++
-	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+	for i:=actualLine;i<actualLine+9() {
+		asciiLetter = append(asciiLetter, scanner.Text())
 	}
 
 	return asciiLetter

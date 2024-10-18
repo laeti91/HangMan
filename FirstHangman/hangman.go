@@ -14,21 +14,16 @@ type LetterIndices struct {
 	Indices []int
 }
 
-func readFile(name string) (*bufio.Scanner, *os.File) {
+func LinesInTxtDoc(name string) []string {
+	var allLines []string
+
 	f, err := os.Open(name)
 	scanner := bufio.NewScanner(f)
+	defer f.Close()
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	return scanner, f
-}
-
-func Lines(name string) []string {
-	var allLines []string
-	scanner, f := readFile(name)
-	defer f.Close()
 
 	for scanner.Scan() {
 		allLines = append(allLines, scanner.Text())
@@ -37,12 +32,12 @@ func Lines(name string) []string {
 }
 
 func wordToFind() string {
-	ensembleMots := Lines("words2.txt")
+	ensembleMots := LinesInTxtDoc("words2.txt")
 	return ensembleMots[rand.Intn(len(ensembleMots))]
 }
 
 func getHangman(nbr int) {
-	ensembleLigneHangman := Lines("hangman.txt")
+	ensembleLigneHangman := LinesInTxtDoc("hangman.txt")
 	for i := nbr; i < nbr+8; i++ {
 		fmt.Println(ensembleLigneHangman[i])
 	}
