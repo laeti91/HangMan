@@ -46,7 +46,7 @@ func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) string {
 	return wordPrinted
 }
 
-func WordToFind() string {
+func wordToFind() string {
 	var ensembleMots []string
 	scanner, _ := readFile("words2.txt")
 
@@ -152,7 +152,7 @@ func main() {
 
 	fmt.Println("\nGood luck you have 10 attemps !")
 
-	word := WordToFind()
+	word := wordToFind()
 
 	wordFoundLetters := make(map[rune]bool)
 	getStatus(word, wordFoundLetters)
@@ -161,32 +161,33 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
-	for attempts := 10; attempts >= 0; attempts-- {
+	for attempts := 10; attempts > 0; {
+		fmt.Println()
 		fmt.Print("\nEnter a letter : ")
 		scanner.Scan()
 		letter := scanner.Text()
 
 		if len(letter) != 1 {
-			fmt.Println("Please enter only one letter.\n")
+			fmt.Println("Please enter only one letter.")
 			continue
 		}
 
 		letterGiven := rune(letter[0])
 
 		if wordFoundLetters[letterGiven] {
-			fmt.Println("You already tried that letter\n")
+			fmt.Println("You already tried that letter")
 			continue
 		}
 		wordFoundLetters[letterGiven] = true
 
 		if strings.ContainsRune(word, letterGiven) {
-			attempts++
-			fmt.Println("wright answer, ", letter, "is present in the word\n")
+			fmt.Println("wright answer, ", letter, "is present in the word")
 		} else {
+			attempts++
 			nbr := (10 - attempts - 1) * 8
 			GetHangman(nbr)
 			if attempts > 0 {
-				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word\n")
+				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word")
 			}
 		}
 

@@ -25,31 +25,13 @@ func readFile(name string) (*bufio.Scanner, *os.File) {
 }
 
 func wordToFind() string {
-	nbrWord := 0
+	var ensembleMots []string
 	scanner, _ := readFile("words2.txt")
 
 	for scanner.Scan() {
-		nbrWord++
+		ensembleMots = append(ensembleMots, scanner.Text())
 	}
-
-	randomNumber := rand.Intn(nbrWord)
-
-	return scanWord(randomNumber)
-}
-
-func scanWord(nbr int) string {
-	word := ""
-	nbrWord2 := 0
-
-	scanner, _ := readFile("words2.txt")
-
-	for scanner.Scan() {
-		nbrWord2++
-		if nbrWord2 == nbr {
-			word = scanner.Text()
-		}
-	}
-	return word
+	return ensembleMots[rand.Intn(len(ensembleMots))]
 }
 
 func getStatus(word string, wordFoundLetters map[rune]bool) {
@@ -65,6 +47,7 @@ func getStatus(word string, wordFoundLetters map[rune]bool) {
 
 func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) {
 	wordPrinted := ""
+	fmt.Println()
 	for _, characters := range word {
 		if wordFoundLetters[characters] {
 			wordPrinted += string(characters)
@@ -129,7 +112,8 @@ func getHangman(nbr int) {
 func main() {
 
 	fmt.Println("\nWelcome to the hangman game !")
-	fmt.Println("You have 10 attemps, good luck !\n")
+	fmt.Println("You have 10 attemps, good luck !")
+	fmt.Println()
 
 	word := wordToFind()
 
@@ -138,32 +122,32 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
-	for attempts := 10; attempts >= 0; attempts-- {
+	for attempts := 10; attempts > 0; {
 		fmt.Print("Enter a letter : ")
 		scanner.Scan()
 		letter := scanner.Text()
 
 		if len(letter) != 1 {
-			fmt.Println("Please enter only one letter.\n")
+			fmt.Println("Please enter only one letter.")
 			continue
 		}
 
 		letterGiven := rune(letter[0])
 
 		if wordFoundLetters[letterGiven] {
-			fmt.Println("You already tried that letter\n")
+			fmt.Println("You already tried that letter")
 			continue
 		}
 		wordFoundLetters[letterGiven] = true
 
 		if strings.ContainsRune(word, letterGiven) {
-			attempts++
-			fmt.Println("wright answer, ", letter, "is present in the word\n")
+			fmt.Println("wright answer, ", letter, "is present in the word")
 		} else {
+			attempts--
 			nbr := (10 - attempts - 1) * 8
 			getHangman(nbr)
 			if attempts > 0 {
-				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word\n")
+				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word")
 			}
 		}
 
@@ -177,12 +161,12 @@ func main() {
 		}
 
 		if foundAllLetters {
-			fmt.Println("Congratulation, you found the word :", word, "\n")
+			fmt.Println("Congratulation, you found the word :", word, "")
 			break
 		}
 
 		if attempts == 0 {
-			fmt.Println("Your number of attempts reached 0. The word was : ", word, "\n")
+			fmt.Println("Your number of attempts reached 0. The word was : ", word)
 		}
 	}
 }
