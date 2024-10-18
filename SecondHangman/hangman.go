@@ -129,8 +129,8 @@ func GetAsciiLett(nbr int) []string {
 	actualLine := (nbr - 32) * 9
 	var asciiLetter []string
 
-	for i:=actualLine;i<actualLine+9() {
-		asciiLetter = append(asciiLetter, scanner.Text())
+	for i := actualLine; i < actualLine+9; i++ {
+		asciiLetter = append(asciiLetter, list[i])
 	}
 
 	return asciiLetter
