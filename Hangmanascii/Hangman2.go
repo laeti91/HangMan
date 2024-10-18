@@ -133,7 +133,6 @@ func GetAsciiLett(nbr int) []string {
 
 func PrintAsciiHugeLett(input string) {
 	var asciiHugeLett [][]string
-	fmt.Println()
 
 	for _, char := range input {
 		asciiHugeLett = append(asciiHugeLett, GetAsciiLett(int(char)))
