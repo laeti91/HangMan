@@ -133,6 +133,7 @@ func GetAsciiLett(nbr int) []string {
 
 func PrintAsciiHugeLett(input string) {
 	var asciiHugeLett [][]string
+	fmt.Println()
 
 	for _, char := range input {
 		asciiHugeLett = append(asciiHugeLett, GetAsciiLett(int(char)))
@@ -167,29 +168,28 @@ func main() {
 		letter := scanner.Text()
 
 		if len(letter) != 1 {
-			fmt.Println("Please enter only one letter.\n")
+			fmt.Println("Please enter only one letter.")
 			continue
 		}
 
 		letterGiven := rune(letter[0])
 
 		if wordFoundLetters[letterGiven] {
-			fmt.Println("You already tried that letter\n")
+			fmt.Println("You already tried that letter")
 			continue
 		}
 		wordFoundLetters[letterGiven] = true
 
 		if strings.ContainsRune(word, letterGiven) {
-			fmt.Println("wright answer, ", letter, "is present in the word\n")
+			fmt.Println("wright answer, ", letter, "is present in the word")
 		} else {
 			attempts--
 			nbr := (10 - attempts - 1) * 8
 			GetHangman(nbr)
 			if attempts > 0 {
-				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word\n")
+				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word")
 			}
 		}
-
 		word2 := printWordGuessStatus(word, wordFoundLetters)
 		PrintAsciiHugeLett(word2)
 
@@ -201,12 +201,12 @@ func main() {
 		}
 
 		if foundAllLetters {
-			fmt.Println("Congratulation, you found the word :", word, "\n")
+			fmt.Println("Congratulation, you found the word :", word)
 			break
 		}
 
 		if attempts == 0 {
-			fmt.Println("Your number of attempts reached 0. The word was : ", word, "\n")
+			fmt.Println("Your number of attempts reached 0. The word was : ", word)
 		}
 	}
 }
