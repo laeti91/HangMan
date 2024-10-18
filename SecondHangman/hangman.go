@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+type LetterIndices struct {
+	Letter  string
+	Indices []int
+}
+
 func readFile(name string) (*bufio.Scanner, *os.File) {
 	f, err := os.Open(name)
 	scanner := bufio.NewScanner(f)
@@ -49,11 +54,6 @@ func WordToFind() string {
 		ensembleMots = append(ensembleMots, scanner.Text())
 	}
 	return ensembleMots[rand.Intn(len(ensembleMots))]
-}
-
-type LetterIndices struct {
-	Letter  string
-	Indices []int
 }
 
 func nUniqueRandomLetters(word string) []LetterIndices {
