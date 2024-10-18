@@ -180,8 +180,8 @@ func main() {
 		wordFoundLetters[letterGiven] = true
 
 		if strings.ContainsRune(word, letterGiven) {
-			attempts++
 			fmt.Println("wright answer, ", letter, "is present in the word\n")
+			attempts++
 		} else {
 			nbr := (10 - attempts - 1) * 8
 			GetHangman(nbr)
@@ -199,12 +199,10 @@ func main() {
 				foundAllLetters = false
 			}
 		}
-
 		if foundAllLetters {
 			fmt.Println("Congratulation, you found the word :", word, "\n")
 			break
 		}
-
 		if attempts == 0 {
 			fmt.Println("Your number of attempts reached 0. The word was : ", word, "\n")
 		}
