@@ -31,30 +31,6 @@ func LinesInTxtDoc(name string) []string {
 	return allLines
 }
 
-func wordToFind() string {
-	ensembleMots := LinesInTxtDoc("words2.txt")
-	return ensembleMots[rand.Intn(len(ensembleMots))]
-}
-
-func getHangman(nbr int) {
-	ensembleLigneHangman := LinesInTxtDoc("hangman.txt")
-	for i := nbr; i < nbr+8; i++ {
-		fmt.Println(ensembleLigneHangman[i])
-	}
-
-}
-
-func getStatus(word string, wordFoundLetters map[rune]bool) {
-	letterIndices := nUniqueRandomLetters(word)
-
-	for _, li := range letterIndices {
-		for _, i := range li.Indices {
-			wordFoundLetters[rune(word[i])] = true
-		}
-	}
-	printWordGuessStatus(word, wordFoundLetters)
-}
-
 func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) {
 	wordPrinted := ""
 	fmt.Println()
@@ -106,17 +82,25 @@ func main() {
 	fmt.Println("You have 10 attemps, good luck !")
 	fmt.Println()
 
-	word := wordToFind()
+	allWordsFile := LinesInTxtDoc("words2.txt")
+	word := allWordsFile[rand.Intn(len(allWordsFile))]
 
 	wordFoundLetters := make(map[rune]bool)
-	getStatus(word, wordFoundLetters)
+	letterIndices := nUniqueRandomLetters(word)
 
-	scanner := bufio.NewScanner(os.Stdin)
+	for _, li := range letterIndices {
+		for _, i := range li.Indices {
+			wordFoundLetters[rune(word[i])] = true
+		}
+	}
+	printWordGuessStatus(word, wordFoundLetters)
+
+	letterScanner := bufio.NewScanner(os.Stdin)
 
 	for attempts := 10; attempts > 0; {
 		fmt.Print("Enter a letter : ")
-		scanner.Scan()
-		letter := scanner.Text()
+		letterScanner.Scan()
+		letter := letterScanner.Text()
 		fmt.Println()
 
 		if len(letter) != 1 {
@@ -137,7 +121,12 @@ func main() {
 		} else {
 			attempts--
 			nbr := (10 - attempts - 1) * 8
-			getHangman(nbr)
+
+			ensembleLigneHangman := LinesInTxtDoc("hangman.txt")
+			for i := nbr; i < nbr+8; i++ {
+				fmt.Println(ensembleLigneHangman[i])
+			}
+
 			if attempts > 0 {
 				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word")
 			}
