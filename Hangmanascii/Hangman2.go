@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+type LetterIndices struct {
+	Letter  string
+	Indices []int
+}
+
 func readFile(name string) (*bufio.Scanner, *os.File) {
 	f, err := os.Open(name)
 	scanner := bufio.NewScanner(f)
@@ -17,6 +22,16 @@ func readFile(name string) (*bufio.Scanner, *os.File) {
 		log.Fatal(err)
 	}
 	return scanner, f
+}
+
+func WordToFind() string {
+	var ensembleMots []string
+	scanner, _ := readFile("word.txt")
+
+	for scanner.Scan() {
+		ensembleMots = append(ensembleMots, scanner.Text())
+	}
+	return ensembleMots[rand.Intn(len(ensembleMots))]
 }
 
 func getStatus(word string, wordFoundLetters map[rune]bool) {
@@ -39,21 +54,6 @@ func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) string {
 		}
 	}
 	return wordPrinted
-}
-
-func WordToFind() string {
-	var ensembleMots []string
-	scanner, _ := readFile("word.txt")
-
-	for scanner.Scan() {
-		ensembleMots = append(ensembleMots, scanner.Text())
-	}
-	return ensembleMots[rand.Intn(len(ensembleMots))]
-}
-
-type LetterIndices struct {
-	Letter  string
-	Indices []int
 }
 
 func nUniqueRandomLetters(word string) []LetterIndices {
@@ -161,7 +161,7 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
-	for attempts := 10; attempts >= 0; attempts-- {
+	for attempts := 10; attempts > 0; {
 		fmt.Print("\nEnter a letter : ")
 		scanner.Scan()
 		letter := scanner.Text()
@@ -181,8 +181,8 @@ func main() {
 
 		if strings.ContainsRune(word, letterGiven) {
 			fmt.Println("wright answer, ", letter, "is present in the word\n")
-			attempts++
 		} else {
+			attempts--
 			nbr := (10 - attempts - 1) * 8
 			GetHangman(nbr)
 			if attempts > 0 {
@@ -199,10 +199,12 @@ func main() {
 				foundAllLetters = false
 			}
 		}
+
 		if foundAllLetters {
 			fmt.Println("Congratulation, you found the word :", word, "\n")
 			break
 		}
+
 		if attempts == 0 {
 			fmt.Println("Your number of attempts reached 0. The word was : ", word, "\n")
 		}
