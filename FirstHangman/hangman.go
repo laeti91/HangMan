@@ -25,13 +25,31 @@ func readFile(name string) (*bufio.Scanner, *os.File) {
 }
 
 func wordToFind() string {
-	var ensembleMots []string
+	nbrWord := 0
 	scanner, _ := readFile("words2.txt")
 
 	for scanner.Scan() {
-		ensembleMots = append(ensembleMots, scanner.Text())
+		nbrWord++
 	}
-	return ensembleMots[rand.Intn(len(ensembleMots))]
+
+	randomNumber := rand.Intn(nbrWord)
+
+	return scanWord(randomNumber)
+}
+
+func scanWord(nbr int) string {
+	word := ""
+	nbrWord2 := 0
+
+	scanner, _ := readFile("words2.txt")
+
+	for scanner.Scan() {
+		nbrWord2++
+		if nbrWord2 == nbr {
+			word = scanner.Text()
+		}
+	}
+	return word
 }
 
 func getStatus(word string, wordFoundLetters map[rune]bool) {
@@ -118,12 +136,12 @@ func main() {
 	wordFoundLetters := make(map[rune]bool)
 	getStatus(word, wordFoundLetters)
 
-	letterScanner := bufio.NewScanner(os.Stdin)
+	scanner := bufio.NewScanner(os.Stdin)
 
 	for attempts := 10; attempts >= 0; attempts-- {
 		fmt.Print("Enter a letter : ")
-		letterScanner.Scan()
-		letter := letterScanner.Text()
+		scanner.Scan()
+		letter := scanner.Text()
 
 		if len(letter) != 1 {
 			fmt.Println("Please enter only one letter.\n")
@@ -139,9 +157,9 @@ func main() {
 		wordFoundLetters[letterGiven] = true
 
 		if strings.ContainsRune(word, letterGiven) {
+			attempts++
 			fmt.Println("wright answer, ", letter, "is present in the word\n")
 		} else {
-			attempts--
 			nbr := (10 - attempts - 1) * 8
 			getHangman(nbr)
 			if attempts > 0 {
@@ -157,6 +175,7 @@ func main() {
 				foundAllLetters = false
 			}
 		}
+
 		if foundAllLetters {
 			fmt.Println("Congratulation, you found the word :", word, "\n")
 			break
