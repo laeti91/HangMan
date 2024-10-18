@@ -25,31 +25,13 @@ func readFile(name string) (*bufio.Scanner, *os.File) {
 }
 
 func wordToFind() string {
-	nbrWord := 0
+	var ensembleMots []string
 	scanner, _ := readFile("words2.txt")
 
 	for scanner.Scan() {
-		nbrWord++
+		ensembleMots = append(ensembleMots, scanner.Text())
 	}
-
-	randomNumber := rand.Intn(nbrWord)
-
-	return scanWord(randomNumber)
-}
-
-func scanWord(nbr int) string {
-	word := ""
-	nbrWord2 := 0
-
-	scanner, _ := readFile("words2.txt")
-
-	for scanner.Scan() {
-		nbrWord2++
-		if nbrWord2 == nbr {
-			word = scanner.Text()
-		}
-	}
-	return word
+	return ensembleMots[rand.Intn(len(ensembleMots))]
 }
 
 func getStatus(word string, wordFoundLetters map[rune]bool) {
