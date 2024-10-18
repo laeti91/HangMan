@@ -21,17 +21,32 @@ func readFile(name string) (*bufio.Scanner, *os.File) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	return scanner, f
 }
 
-func wordToFind() string {
-	var ensembleMots []string
-	scanner, _ := readFile("words2.txt")
+func Lines(name string) []string {
+	var AllLines []string
+	scanner, f := readFile(name)
+	defer f.Close()
 
 	for scanner.Scan() {
-		ensembleMots = append(ensembleMots, scanner.Text())
+		AllLines = append(AllLines, scanner.Text())
 	}
+	return AllLines
+}
+
+func wordToFind() string {
+	ensembleMots := Lines("words2.txt")
 	return ensembleMots[rand.Intn(len(ensembleMots))]
+}
+
+func getHangman(nbr int) {
+	ensembleLigneHangman := Lines("hangman.txt")
+	for i := nbr; i < nbr+8; i++ {
+		fmt.Println(ensembleLigneHangman[i])
+	}
+
 }
 
 func getStatus(word string, wordFoundLetters map[rune]bool) {
@@ -90,25 +105,6 @@ func nUniqueRandomLetters(word string) []LetterIndices {
 	return tab
 }
 
-func getHangman(nbr int) {
-	scanner, f := readFile("hangman.txt")
-
-	defer f.Close()
-
-	line := 0
-
-	for scanner.Scan() {
-		line++
-		if line >= nbr && line <= nbr+8 {
-			fmt.Println(scanner.Text())
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-}
-
 func main() {
 
 	fmt.Println("\nWelcome to the hangman game !")
@@ -126,6 +122,7 @@ func main() {
 		fmt.Print("Enter a letter : ")
 		scanner.Scan()
 		letter := scanner.Text()
+		fmt.Println()
 
 		if len(letter) != 1 {
 			fmt.Println("Please enter only one letter.")
