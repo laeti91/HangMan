@@ -26,14 +26,14 @@ func readFile(name string) (*bufio.Scanner, *os.File) {
 }
 
 func Lines(name string) []string {
-	var AllLines []string
+	var allLines []string
 	scanner, f := readFile(name)
 	defer f.Close()
 
 	for scanner.Scan() {
-		AllLines = append(AllLines, scanner.Text())
+		allLines = append(allLines, scanner.Text())
 	}
-	return AllLines
+	return allLines
 }
 
 func wordToFind() string {
