@@ -57,15 +57,6 @@ func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) {
 	fmt.Println(wordPrinted)
 }
 
-func allLettersFound(word string, wordFoundLetters map[rune]bool) bool {
-	for _, characters := range word {
-		if !wordFoundLetters[characters] {
-			return false
-		}
-	}
-	return true
-}
-
 func nUniqueRandomLetters(word string) []LetterIndices {
 	n := len(word)/2 - 1
 	var tab []LetterIndices
@@ -127,14 +118,12 @@ func main() {
 	wordFoundLetters := make(map[rune]bool)
 	getStatus(word, wordFoundLetters)
 
-	attempts := 10
+	letterScanner := bufio.NewScanner(os.Stdin)
 
-	scanner := bufio.NewScanner(os.Stdin)
-
-	for attempts != 0 {
+	for attempts := 10; attempts >= 0; attempts-- {
 		fmt.Print("Enter a letter : ")
-		scanner.Scan()
-		letter := scanner.Text()
+		letterScanner.Scan()
+		letter := letterScanner.Text()
 
 		if len(letter) != 1 {
 			fmt.Println("Please enter only one letter.\n")
@@ -162,7 +151,13 @@ func main() {
 
 		printWordGuessStatus(word, wordFoundLetters)
 
-		if allLettersFound(word, wordFoundLetters) {
+		foundAllLetters := true
+		for _, characters := range word {
+			if !wordFoundLetters[characters] {
+				foundAllLetters = false
+			}
+		}
+		if foundAllLetters {
 			fmt.Println("Congratulation, you found the word :", word, "\n")
 			break
 		}

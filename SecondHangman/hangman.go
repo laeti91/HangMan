@@ -233,8 +233,14 @@ func main() {
 			word2 := printWordGuessStatus(word, wordFoundLetters)
 			PrintAsciiHugeLett(word2)
 
-			if allLettersFounds(word, wordFoundLetters) {
-				fmt.Println("\nCongratulation, you found the word :", word, "\n")
+			foundAllLetters := true
+			for _, characters := range word {
+				if !wordFoundLetters[characters] {
+					foundAllLetters = false
+				}
+			}
+			if foundAllLetters {
+				fmt.Println("Congratulation, you found the word :", word, "\n")
 				break
 			}
 
