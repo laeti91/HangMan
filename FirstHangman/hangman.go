@@ -33,7 +33,6 @@ func LinesInTxtDoc(name string) []string {
 
 func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) {
 	wordPrinted := ""
-	fmt.Println()
 	for _, characters := range word {
 		if wordFoundLetters[characters] {
 			wordPrinted += string(characters)
@@ -41,113 +40,102 @@ func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) {
 			wordPrinted += "_"
 		}
 	}
-	fmt.Println(wordPrinted)
+	fmt.Println("\n" + wordPrinted)
 }
 
 func nUniqueRandomLetters(word string) []LetterIndices {
 	n := len(word)/2 - 1
-	var tab []LetterIndices
+	letterMap := make(map[string][]int)
 	totalIndices := 0
 
 	for totalIndices < n {
 		letterInd := rand.Intn(len(word))
 		letter := string(word[letterInd])
-		found := false
-		for i := range tab {
-			if tab[i].Letter == letter {
-				tab[i].Indices = append(tab[i].Indices, letterInd)
-				found = true
-				break
-			}
-		}
-		if !found {
+		if _, found := letterMap[letter]; !found {
 			var indices []int
 			for i, char := range word {
 				if string(char) == letter {
 					indices = append(indices, i)
 				}
 			}
-			tab = append(tab, LetterIndices{Letter: letter, Indices: indices})
+			letterMap[letter] = indices
 			totalIndices += len(indices)
-		} else {
-			totalIndices++
 		}
+	}
+
+	tab := make([]LetterIndices, 0, len(letterMap))
+	for letter, indices := range letterMap {
+		tab = append(tab, LetterIndices{Letter: letter, Indices: indices})
 	}
 	return tab
 }
 
+func foundAllLetters(word string, wordFoundLetters map[rune]bool) bool {
+	for _, char := range word {
+		if !wordFoundLetters[char] {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
+	var Reset = "\033[0m"
+	var Red = "\033[31m"
+	var Green = "\033[32m"
 
-	fmt.Println("\nWelcome to the hangman game !")
-	fmt.Println("You have 10 attemps, good luck !")
-	fmt.Println()
-
+	fmt.Println("\nWelcome to the hangman game!")
+	fmt.Println("You have 10 attempts, good luck!\n")
 	allWordsFile := LinesInTxtDoc("words2.txt")
 	word := allWordsFile[rand.Intn(len(allWordsFile))]
 
 	wordFoundLetters := make(map[rune]bool)
-	letterIndices := nUniqueRandomLetters(word)
-
-	for _, li := range letterIndices {
+	for _, li := range nUniqueRandomLetters(word) {
 		for _, i := range li.Indices {
 			wordFoundLetters[rune(word[i])] = true
 		}
 	}
 	printWordGuessStatus(word, wordFoundLetters)
 
-	letterScanner := bufio.NewScanner(os.Stdin)
-
-	for attempts := 10; attempts > 0; {
-		fmt.Print("Enter a letter : ")
-		letterScanner.Scan()
-		letter := letterScanner.Text()
+	scanner := bufio.NewScanner(os.Stdin)
+	attempts := 10
+	for attempts > 0 {
+		fmt.Print("Enter a letter: ")
+		scanner.Scan()
+		letter := scanner.Text()
 		fmt.Println()
-
-		if len(letter) != 1 {
-			fmt.Println("Please enter only one letter.")
+		if len(letter) > 1 {
+			fmt.Println(Red + "Please enter only one letter." + Reset + "\n")
+			continue
+		} else if len(letter) == 0 {
+			fmt.Println(Red + "Please enter a letter." + Reset + "\n")
 			continue
 		}
-
 		letterGiven := rune(letter[0])
-
 		if wordFoundLetters[letterGiven] {
-			fmt.Println("You already tried that letter")
+			fmt.Println(Red + "You already tried that letter" + Reset + "\n")
 			continue
 		}
 		wordFoundLetters[letterGiven] = true
-
 		if strings.ContainsRune(word, letterGiven) {
-			fmt.Println("wright answer, ", letter, "is present in the word")
+			fmt.Println(Green+"Correct answer, ", letter, "is present in the word"+Reset)
 		} else {
 			attempts--
-			nbr := (10 - attempts - 1) * 8
-
 			ensembleLigneHangman := LinesInTxtDoc("hangman.txt")
-			for i := nbr; i < nbr+8; i++ {
+			for i := (10 - attempts - 1) * 8; i < (10-attempts-1)*8+8; i++ {
 				fmt.Println(ensembleLigneHangman[i])
 			}
-
 			if attempts > 0 {
-				fmt.Println("wrong answer, you still have", attempts, "attempts to discover the word")
+				fmt.Println(Red+"Wrong answer, you still have", attempts, "attempts to discover the word"+Reset)
 			}
 		}
-
 		printWordGuessStatus(word, wordFoundLetters)
-
-		foundAllLetters := true
-		for _, characters := range word {
-			if !wordFoundLetters[characters] {
-				foundAllLetters = false
-			}
-		}
-
-		if foundAllLetters {
-			fmt.Println("Congratulation, you found the word :", word, "")
+		if foundAllLetters(word, wordFoundLetters) {
+			fmt.Println(Green+"Congratulations, you found the word:", word+Reset)
 			break
 		}
-
 		if attempts == 0 {
-			fmt.Println("Your number of attempts reached 0. The word was : ", word)
+			fmt.Println(Red+"Your number of attempts reached 0. The word was:", word+Reset)
 		}
 	}
 }
