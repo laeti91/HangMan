@@ -9,13 +9,15 @@ import (
 	"strings"
 )
 
-type LetterIndices struct { //creates a LetterIndices structure used to have all the letters and their position in the word when the user enters the correct letters into the terminal
+// creates a LetterIndices structure used to have all the letters and their position in the word when the user enters the correct letters into the terminal
+type LetterIndices struct {
 	Letter  string
 	Indices []int
 }
 
 func LinesInTxtDoc(name string) []string {
-	/*This function takes the name of the txt file we want to open and iterates each line of that file adding them into the allLines array which will then be returned.*/
+	/*This function takes the name of the txt file we want to open and iterates each line of that file adding them into the allLines array which will then
+	be returned.*/
 	var allLines []string
 
 	f, err := os.Open(name)
@@ -33,11 +35,13 @@ func LinesInTxtDoc(name string) []string {
 }
 
 func printWordGuessStatus(word string, wordFoundLetters map[rune]bool, lett string) {
-	/*This function prints the status of the word to find with the letters already found by the user and a _ for the ones not yet found. The letter given by the user will also be green if it is in the word.*/
+	/*This function prints the status of the word to find with the letters already found by the user and a _ for the ones not yet found. The letter given
+	by the user will also be green if it is in the word.*/
 	var Green = "\033[32m" // creates a variable with the green color
 	var Reset = "\033[0m"  // used to set the color back to the default
 	wordPrinted := ""
-	for _, characters := range word { //this loop looks if each letter in the word is in the structure wordFoundLetters to then add it to wordPrinted, if not it will add a _.
+	//this loop looks if each letter in the word is in the structure wordFoundLetters to then add it to wordPrinted, if not it will add a _.
+	for _, characters := range word {
 		if wordFoundLetters[characters] {
 			if string(characters) == lett {
 				wordPrinted += Green + string(characters) + Reset //the green color will be added only to the letter given by the user if it's in the word
@@ -84,7 +88,8 @@ func nUniqueRandomLetters(word string) []LetterIndices {
 }
 
 func foundAllLetters(word string, wordFoundLetters map[rune]bool) bool {
-	/*This function checks if all the letters in the word have been found by the user. It returns a boolean saying true if the word is found and false otherwise.*/
+	/*This function checks if all the letters in the word have been found by the user. It returns a boolean saying true if the word is found
+	and false otherwise.*/
 	for _, char := range word {
 		if !wordFoundLetters[char] {
 			return false
@@ -109,7 +114,8 @@ func main() {
 			wordFoundLetters[rune(word[i])] = true //puts true to each letter showing at the begining
 		}
 	}
-	printWordGuessStatus(word, wordFoundLetters, "") //calls the printWordGuessStatus function to show half of the letters in the terminal and _ for the unknown letters
+	//calls the printWordGuessStatus function to show half of the letters in the terminal and _ for the unknown letters
+	printWordGuessStatus(word, wordFoundLetters, "")
 
 	scanner := bufio.NewScanner(os.Stdin)
 	attempts := 10
@@ -136,7 +142,8 @@ func main() {
 		} else { //otherwise the number of attempts decreases and the hangman is showed according to the number of attempts made
 			attempts--
 			ensembleLigneHangman := LinesInTxtDoc("hangman.txt")
-			for i := (10 - attempts - 1) * 8; i < (10-attempts-1)*8+8; i++ { //it shows the lines in hangman.txt from the number of attemps multiplied by 8 to that number plus 8 because each hangman take 8 lines
+			//the loop shows the lines in hangman.txt from the number of attemps multiplied by 8 to that number plus 8 because each hangman take 8 lines
+			for i := (10 - attempts - 1) * 8; i < (10-attempts-1)*8+8; i++ {
 				fmt.Println(ensembleLigneHangman[i])
 			}
 			if attempts > 0 {
