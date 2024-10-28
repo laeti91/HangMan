@@ -31,15 +31,23 @@ func LinesInTxtDoc(name string) []string {
 	return allLines
 }
 
-func printWordGuessStatus(word string, wordFoundLetters map[rune]bool) {
+func printWordGuessStatus(word string, wordFoundLetters map[rune]bool, lett string) {
+	var Green = "\033[32m"
+	var Reset = "\033[0m"
 	wordPrinted := ""
 	for _, characters := range word {
 		if wordFoundLetters[characters] {
-			wordPrinted += string(characters)
+			if string(characters) == lett {
+				wordPrinted += Green + string(characters) + Reset
+			} else {
+				wordPrinted += string(characters)
+			}
+
 		} else {
 			wordPrinted += "_"
 		}
 	}
+
 	fmt.Println("\n" + wordPrinted)
 }
 
@@ -95,7 +103,7 @@ func main() {
 			wordFoundLetters[rune(word[i])] = true
 		}
 	}
-	printWordGuessStatus(word, wordFoundLetters)
+	printWordGuessStatus(word, wordFoundLetters, "")
 
 	scanner := bufio.NewScanner(os.Stdin)
 	attempts := 10
@@ -129,7 +137,7 @@ func main() {
 				fmt.Println(Red+"Wrong answer, you still have", attempts, "attempts to discover the word"+Reset)
 			}
 		}
-		printWordGuessStatus(word, wordFoundLetters)
+		printWordGuessStatus(word, wordFoundLetters, letter)
 		if foundAllLetters(word, wordFoundLetters) {
 			fmt.Println(Green+"Congratulations, you found the word:", word+Reset)
 			break
