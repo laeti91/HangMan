@@ -124,23 +124,37 @@ func LinesInTxtDoc(name string) []string {
 	return allLines
 }
 
-func GetAsciiLett(nbr int) []string {
+func GetAsciiLett(nbr int, newLett bool) []string {
+	var Reset = "\033[0m"
+	var Green = "\033[32m"
 	list := LinesInTxtDoc("standard.txt")
 	actualLine := (nbr - 32) * 9
 	var asciiLetter []string
 
 	for i := actualLine; i < actualLine+9; i++ {
-		asciiLetter = append(asciiLetter, list[i])
+		if newLett {
+			asciiLetter = append(asciiLetter, Green+list[i]+Reset)
+		} else {
+			asciiLetter = append(asciiLetter, list[i])
+		}
+
 	}
 
 	return asciiLetter
 }
 
-func PrintAsciiHugeLett(input string) {
+func PrintAsciiHugeLett(input, lett string) {
+	theLetter := false
 	var asciiHugeLett [][]string
 
 	for _, char := range input {
-		asciiHugeLett = append(asciiHugeLett, GetAsciiLett(int(char)))
+		if string(char) == lett {
+			theLetter = true
+			asciiHugeLett = append(asciiHugeLett, GetAsciiLett(int(char), theLetter))
+		} else {
+			asciiHugeLett = append(asciiHugeLett, GetAsciiLett(int(char), theLetter))
+		}
+		theLetter = false
 	}
 
 	for i := 0; i < 9; i++ {
@@ -162,7 +176,7 @@ func main() {
 	wordFoundLetters := make(map[rune]bool)
 	getStatus(word, wordFoundLetters)
 	word1 := printWordGuessStatus(word, wordFoundLetters)
-	PrintAsciiHugeLett(word1)
+	PrintAsciiHugeLett(word1, "")
 
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -197,7 +211,7 @@ func main() {
 		}
 
 		word2 := printWordGuessStatus(word, wordFoundLetters)
-		PrintAsciiHugeLett(word2)
+		PrintAsciiHugeLett(word2, letter)
 
 		foundAllLetters := true
 		for _, characters := range word {
