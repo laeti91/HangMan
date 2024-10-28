@@ -75,7 +75,7 @@ func nUniqueRandomLetters(word string) []LetterIndices {
 		}
 		if !found { //if the letter is not already in tab, that letter will be integrated to tab with it's indexes as a value
 			var indices []int
-			for i, char := range word { //cheks for doubles and appends there indexes in indices
+			for i, char := range word { //checks for doubles and appends there indexes in indices
 				if string(char) == letter {
 					indices = append(indices, i)
 				}
@@ -103,7 +103,9 @@ func main() {
 	var Red = "\033[31m"
 	var Green = "\033[32m"
 
-	fmt.Println("\nWelcome to the hangman game!")
+	emojiSadFaces := [3]string{"\U0001F622", "\U0001F61E", "\U0001F62D"}
+
+	fmt.Println("\n\U0001F60A " + "Welcome to the hangman game!")
 	fmt.Println("You have 10 attempts, good luck!\n")
 	allWordsFile := LinesInTxtDoc("words2.txt")        //makes an array with all the words in words2.txt
 	word := allWordsFile[rand.Intn(len(allWordsFile))] //takes a random word of the array wich will be the mistery word
@@ -138,7 +140,7 @@ func main() {
 		}
 		wordFoundLetters[letterGiven] = true
 		if strings.ContainsRune(word, letterGiven) { //if the letter is in the word to find a good message is printed
-			fmt.Println(Green+"Correct answer, ", letter, "is present in the word"+Reset)
+			fmt.Println("\U0001F600 "+Green+"Correct answer, ", letter, "is present in the word"+Reset)
 		} else { //otherwise the number of attempts decreases and the hangman is showed according to the number of attempts made
 			attempts--
 			ensembleLigneHangman := LinesInTxtDoc("hangman.txt")
@@ -147,16 +149,16 @@ func main() {
 				fmt.Println(ensembleLigneHangman[i])
 			}
 			if attempts > 0 {
-				fmt.Println(Red+"Wrong answer, you still have", attempts, "attempts to discover the word"+Reset)
+				fmt.Println(emojiSadFaces[rand.Intn(3)]+Red+" Wrong answer, you still have", attempts, "attempts to discover the word"+Reset)
 			}
 		}
 		printWordGuessStatus(word, wordFoundLetters, letter)
 		if foundAllLetters(word, wordFoundLetters) { //if all the foundAllLetters function returns true it means that the word has been found
-			fmt.Println(Green+"Congratulations, you found the word:", word+Reset)
+			fmt.Println("\U0001F601 "+Green+"Congratulations, you found the word:", word+Reset)
 			break
 		}
 		if attempts == 0 { //if the number of attempts reached 0 the word is showed with a message
-			fmt.Println(Red+"Your number of attempts reached 0. The word was:", word+Reset)
+			fmt.Println("\U0001F62D "+Red+"Your number of attempts reached 0. The word was:", word+Reset)
 		}
 	}
 }
