@@ -53,27 +53,32 @@ func printWordGuessStatus(word string, wordFoundLetters map[rune]bool, lett stri
 
 func nUniqueRandomLetters(word string) []LetterIndices {
 	n := len(word)/2 - 1
-	letterMap := make(map[string][]int)
+	var tab []LetterIndices
 	totalIndices := 0
 
 	for totalIndices < n {
 		letterInd := rand.Intn(len(word))
 		letter := string(word[letterInd])
-		if _, found := letterMap[letter]; !found {
+		found := false
+		for i := range tab {
+			if tab[i].Letter == letter {
+				tab[i].Indices = append(tab[i].Indices, letterInd)
+				found = true
+				break
+			}
+		}
+		if !found {
 			var indices []int
 			for i, char := range word {
 				if string(char) == letter {
 					indices = append(indices, i)
 				}
 			}
-			letterMap[letter] = indices
+			tab = append(tab, LetterIndices{Letter: letter, Indices: indices})
 			totalIndices += len(indices)
+		} else {
+			totalIndices++
 		}
-	}
-
-	tab := make([]LetterIndices, 0, len(letterMap))
-	for letter, indices := range letterMap {
-		tab = append(tab, LetterIndices{Letter: letter, Indices: indices})
 	}
 	return tab
 }
