@@ -121,11 +121,11 @@ func PrintAsciiHugeLett(input, lett string) {
 
 func main() {
 
-	var Reset = "\033[0m"  // it resets the text color
+	var Reset = "\033[0m"  // it puts back the default color
 	var Red = "\033[31m"   // it sets the text color to red
 	var Green = "\033[32m" // it sets the text color to green
 
-	emojiSadFaces := [3]string{"\U0001F622", "\U0001F61E", "\U0001F62D"} // to print sad emojis when the gesses are wrong
+	emojiSadFaces := [3]string{"\U0001F622", "\U0001F61E", "\U0001F62D"} // to print sad emojis when the guesses are wrong
 
 	/* smiling face emojis is printed att the beginning of the welcome sentence */
 	fmt.Println("\n\U0001F60A " + "Welcome to the hangman game !")
@@ -142,7 +142,7 @@ func main() {
 		}
 	}
 
-	// it display the current status of the word
+	// it displays the current status of the word
 	PrintAsciiHugeLett(printWordGuessStatus(word, wordFoundLetters), "")
 
 	scanner := bufio.NewScanner(os.Stdin)
